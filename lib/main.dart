@@ -1,46 +1,57 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
+import 'package:flutter_task_15/project_15/bottomNav/bottom_nav.dart';
 import 'package:flutter_task_15/project_15/login_regis/login.dart';
 import 'package:flutter_task_15/project_15/login_regis/register.dart';
-import 'package:flutter_task_15/project_15/splas/splas.dart';
+import 'package:flutter_task_15/project_15/main/add.dart';
+import 'package:flutter_task_15/project_15/main/dashboard.dart';
+import 'package:flutter_task_15/project_15/splas/splas.dart'; // pastikan path-nya benar
 
 void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Widget? _home;
+
+  @override
+  void initState() {
+    super.initState();
+    _startAppFlow();
+  }
+
+  void _startAppFlow() async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    final isLoggedIn = await SharedPref.hasToken();
+
+    setState(() {
+      _home = isLoggedIn ? const BottomNavScreen() : const Login();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      initialRoute: '/',
+      home: _home ?? const Splash(),
       routes: {
-        '/': (context) => Splash(),
+        HomeScreen.id: (context) => HomeScreen(),
         Register.id: (context) => Register(),
         Login.id: (context) => Login(),
+        Add.id: (context) => Add(),
       },
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xffE7EFC7)),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
       ),
-      // home: const SplashScreen(),
     );
   }
 }

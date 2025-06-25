@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_15/project_15/Helper/api.dart';
 
 class Register extends StatefulWidget {
   static const String id = "/register";
@@ -16,6 +17,41 @@ class _RegisterState extends State<Register> {
   final TextEditingController _passwordController = TextEditingController();
 
   bool _isObscure = true;
+  bool _loading = false;
+  final UserServis userServis = UserServis();
+
+  void register() async {
+    setState(() {
+      _loading = true;
+    });
+
+    final res = await UserServis().regisUser(
+      email: _emailController.text,
+      name: _nameController.text,
+      password: _passwordController.text,
+    );
+
+    if (res["data"] != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Berhasil Registrasi!...'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      Navigator.pop(context);
+    } else if (res['errors'] != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Maaf, ${res['message']}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,9 +114,10 @@ class _RegisterState extends State<Register> {
                           ),
                           SizedBox(height: 20),
 
-                          // Name
                           TextFormField(
                             controller: _nameController,
+                            textInputAction: TextInputAction.next,
+
                             decoration: InputDecoration(
                               labelText: 'Full Name',
                               border: OutlineInputBorder(),
@@ -94,9 +131,10 @@ class _RegisterState extends State<Register> {
                           ),
                           SizedBox(height: 16),
 
-                          // Email
                           TextFormField(
                             controller: _emailController,
+                            textInputAction: TextInputAction.next,
+
                             decoration: InputDecoration(
                               labelText: 'Email',
                               border: OutlineInputBorder(),
@@ -111,9 +149,10 @@ class _RegisterState extends State<Register> {
                           ),
                           SizedBox(height: 16),
 
-                          // Password
                           TextFormField(
                             controller: _passwordController,
+                            textInputAction: TextInputAction.go,
+
                             obscureText: _isObscure,
                             decoration: InputDecoration(
                               labelText: 'Password',
@@ -153,24 +192,31 @@ class _RegisterState extends State<Register> {
                               ),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Registering...')),
+                                  print('Email: ${_emailController.text}');
+                                  print('Nama: ${_nameController.text}');
+                                  print(
+                                    'Password: ${_passwordController.text}',
                                   );
+                                  register();
                                 }
                               },
-                              child: Text(
-                                'Register',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              child:
+                                  _loading
+                                      ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                      : Text(
+                                        'Register',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                             ),
                           ),
 
                           SizedBox(height: 16),
 
-                          // Already have account
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_task_15/project_15/Helper/api.dart';
+import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
+import 'package:flutter_task_15/project_15/bottomNav/bottom_nav.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login";
@@ -13,8 +16,55 @@ class _LoginState extends State<Login> {
 
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
+  final UserServis userServis = UserServis();
   bool _isObscure = true;
+  bool _loading = false;
+
+  void login() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _loading = true;
+    });
+
+    final res = await UserServis().loginUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
+    print('Respon dari API: $res');
+
+    if (res['data'] != null) {
+      final token = res['data']['token'];
+      await SharedPref.saveToken(token);
+
+      // Tampilkan snackbar berhasil
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Berhasil Login'),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      // Pindah ke HomeScreen setelah login berhasil
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const BottomNavScreen()),
+        (route) => false,
+      );
+    } else if (res['errors'] != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Maaf, ${res['message']}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+
+    setState(() {
+      _loading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +72,6 @@ class _LoginState extends State<Login> {
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // Background image
           Container(
             decoration: BoxDecoration(
               image: DecorationImage(
@@ -81,6 +130,7 @@ class _LoginState extends State<Login> {
                           SizedBox(height: 20),
                           TextFormField(
                             controller: _emailController,
+                            textInputAction: TextInputAction.next,
                             decoration: InputDecoration(
                               labelText: 'Email',
                               border: OutlineInputBorder(),
@@ -97,6 +147,7 @@ class _LoginState extends State<Login> {
                           TextFormField(
                             controller: _passwordController,
                             obscureText: _isObscure,
+                            textInputAction: TextInputAction.done,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               border: OutlineInputBorder(),
@@ -133,18 +184,31 @@ class _LoginState extends State<Login> {
                               ),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Logging in...')),
+                                  print('Email: ${_emailController.text}');
+                                  print(
+                                    'Password: ${_passwordController.text}',
+                                  );
+                                  login();
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => BottomNavScreen(),
+                                    ),
                                   );
                                 }
                               },
-                              child: Text(
-                                'Login',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
+                              child:
+                                  _loading
+                                      ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                      : Text(
+                                        'Login',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                        ),
+                                      ),
                             ),
                           ),
                           SizedBox(height: 16),
