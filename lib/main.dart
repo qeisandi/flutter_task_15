@@ -4,6 +4,8 @@ import 'package:flutter_task_15/project_15/bottomNav/bottom_nav.dart';
 import 'package:flutter_task_15/project_15/login_regis/login.dart';
 import 'package:flutter_task_15/project_15/login_regis/register.dart';
 import 'package:flutter_task_15/project_15/main/add.dart';
+import 'package:flutter_task_15/project_15/main/add_sc.dart';
+import 'package:flutter_task_15/project_15/main/book_sc.dart';
 import 'package:flutter_task_15/project_15/main/dashboard.dart';
 import 'package:flutter_task_15/project_15/splas/splas.dart'; // pastikan path-nya benar
 
@@ -48,6 +50,8 @@ class _MyAppState extends State<MyApp> {
         Register.id: (context) => Register(),
         Login.id: (context) => Login(),
         Add.id: (context) => Add(),
+        AddSc.id: (context) => AddSc(),
+        BookSc.id: (context) => BookSc(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),
