@@ -26,7 +26,10 @@ class BookSc extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff039EFD),
-        title: Text('Booking Jadwal', style: TextStyle(fontFamily: 'Gilroy', color: Colors.white)),
+        title: Text(
+          'Booking Jadwal',
+          style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+        ),
       ),
       body: ListView.builder(
         padding: EdgeInsets.all(12),
@@ -35,17 +38,25 @@ class BookSc extends StatelessWidget {
           final item = dummySchedule[index];
           return Card(
             elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
             margin: EdgeInsets.only(bottom: 12),
             child: ListTile(
-              title: Text('${item['field']} - ${item['date']}', style: TextStyle(fontFamily: 'Gilroy')),
+              title: Text(
+                '${item['field']} - ${item['date']}',
+                style: TextStyle(fontFamily: 'Gilroy'),
+              ),
               subtitle: Text('${item['time']} • ${item['price']}'),
               trailing: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Color(0xff039EFD)),
-                onPressed: () {
-                  // TODO: Tampilkan dialog konfirmasi booking
-                },
-                child: Text('BOOK', style: TextStyle(fontFamily: 'Gilroy')),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xff039EFD),
+                ),
+                onPressed: () {},
+                child: Text(
+                  'BOOK',
+                  style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+                ),
               ),
             ),
           );

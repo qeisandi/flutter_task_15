@@ -21,37 +21,58 @@ class _AddScState extends State<AddSc> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xff039EFD),
-        title: Text('Tambah Jadwal', style: TextStyle(fontFamily: 'Gilroy', color: Colors.white)),
+        title: Text(
+          'Tambah Jadwal',
+          style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                _buildDropdownField('Pilih Lapangan', ['Lapangan A', 'Lapangan B'], (val) {
-                  setState(() => selectedField = val);
-                }, selectedField),
+                _buildDropdownField(
+                  'Pilih Lapangan',
+                  ['Lapangan A', 'Lapangan B'],
+                  (val) {
+                    setState(() => selectedField = val);
+                  },
+                  selectedField,
+                ),
                 SizedBox(height: 16),
                 _buildDatePicker(),
                 SizedBox(height: 16),
-                _buildTimePicker('Waktu Mulai', (time) => setState(() => startTime = time), startTime),
+                _buildTimePicker(
+                  'Waktu Mulai',
+                  (time) => setState(() => startTime = time),
+                  startTime,
+                ),
                 SizedBox(height: 16),
-                _buildTimePicker('Waktu Selesai', (time) => setState(() => endTime = time), endTime),
+                _buildTimePicker(
+                  'Waktu Selesai',
+                  (time) => setState(() => endTime = time),
+                  endTime,
+                ),
                 SizedBox(height: 16),
                 _buildDropdownField('Status', statusList, (val) {
                   setState(() => selectedStatus = val);
                 }, selectedStatus),
                 SizedBox(height: 24),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Color(0xff039EFD)),
-                  onPressed: () {
-                    // TODO: Kirim data ke API
-                  },
-                  child: Text('TAMBAH JADWAL', style: TextStyle(fontFamily: 'Gilroy')),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xff039EFD),
+                  ),
+                  onPressed: () {},
+                  child: Text(
+                    'TAMBAH JADWAL',
+                    style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -61,7 +82,12 @@ class _AddScState extends State<AddSc> {
     );
   }
 
-  Widget _buildDropdownField(String label, List<String> items, Function(String?) onChanged, String? selected) {
+  Widget _buildDropdownField(
+    String label,
+    List<String> items,
+    Function(String?) onChanged,
+    String? selected,
+  ) {
     return DropdownButtonFormField<String>(
       decoration: InputDecoration(
         labelText: label,
@@ -70,7 +96,8 @@ class _AddScState extends State<AddSc> {
       ),
       value: selected,
       onChanged: onChanged,
-      items: items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
+      items:
+          items.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
     );
   }
 
@@ -99,10 +126,17 @@ class _AddScState extends State<AddSc> {
     );
   }
 
-  Widget _buildTimePicker(String label, Function(TimeOfDay) onTimePicked, TimeOfDay? time) {
+  Widget _buildTimePicker(
+    String label,
+    Function(TimeOfDay) onTimePicked,
+    TimeOfDay? time,
+  ) {
     return GestureDetector(
       onTap: () async {
-        final picked = await showTimePicker(context: context, initialTime: TimeOfDay.now());
+        final picked = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
         if (picked != null) onTimePicked(picked);
       },
       child: InputDecorator(

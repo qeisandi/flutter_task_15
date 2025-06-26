@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_task_15/project_15/Helper/api.dart';
+import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
 import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
 import 'package:flutter_task_15/project_15/login_regis/login.dart';
 
@@ -131,66 +132,108 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   }).toList(),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: 16),
             Center(
-              child: Text(
-                'Selamat datang!',
-                style: TextStyle(fontSize: 24, fontFamily: 'Gilroy'),
+              child: Column(
+                children: [
+                  Text(
+                    'Welcome!',
+                    style: TextStyle(fontSize: 24, fontFamily: 'Gilroy'),
+                  ),
+                  Text(
+                    'Mau main futsal dimana hari ini?\n atau punya bookingan lapangan',
+                    textAlign: TextAlign.justify,
+                  ),
+                ],
               ),
             ),
             SizedBox(height: 16),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.all(12),
-              itemCount: 4,
-              itemBuilder: (BuildContext context, int index) {
-                return ClipRRect(
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: Row(
-                      children: [
-                        Image.asset(
-                          'assets/image/banner2.jpg',
-                          height: 120,
-                          width: 90,
-                          fit: BoxFit.cover,
+            FutureBuilder<List<GetL>>(
+              future: userServis.getLapangan(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text("Error: ${snapshot.error}"));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text("Lapangan tidak ditemukan"));
+                }
+
+                final lapanganList = snapshot.data!;
+
+                return Padding(
+                  padding: EdgeInsets.all(12),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: lapanganList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final lapangan = lapanganList[index];
+                      return Card(
+                        color: Colors.white,
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Lapangan A",
-                                  style: const TextStyle(
-                                    fontFamily: 'Gilroy',
-                                    fontSize: 16,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Contoh Lapangan A',
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child:
+                                    lapangan.imageUrl != null
+                                        ? Image.network(
+                                          lapangan.imageUrl!,
+                                          height: 120,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Icon(
+                                                    Icons.broken_image,
+                                                    size: 90,
+                                                  ),
+                                        )
+                                        : Container(
+                                          height: 120,
+                                          width: 90,
+                                          color: Colors.grey[300],
+                                          child: Icon(Icons.image, size: 40),
+                                        ),
+                              ),
                             ),
-                          ),
+                            Padding(
+                              padding: EdgeInsets.all(12.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    lapangan.name ?? 'Tanpa Nama',
+                                    style: const TextStyle(
+                                      fontFamily: 'Gilroy',
+                                      fontSize: 16,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Rp ${lapangan.pricePerHour ?? '-'} / jam',
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
                 );
               },

@@ -11,7 +11,7 @@ String getLapanganToJson(GetLapangan data) => json.encode(data.toJson());
 
 class GetLapangan {
   String? message;
-  List<Lapangan>? data;
+  List<GetL>? data;
 
   GetLapangan({this.message, this.data});
 
@@ -20,9 +20,7 @@ class GetLapangan {
     data:
         json["data"] == null
             ? []
-            : List<Lapangan>.from(
-              json["data"]!.map((x) => Lapangan.fromJson(x)),
-            ),
+            : List<GetL>.from(json["data"]!.map((x) => GetL.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,21 +30,35 @@ class GetLapangan {
   };
 }
 
-class Lapangan {
+class GetL {
   int? id;
   String? name;
   DateTime? createdAt;
   DateTime? updatedAt;
+  String? imagePath;
+  String? pricePerHour;
+  String? imageUrl;
 
-  Lapangan({this.id, this.name, this.createdAt, this.updatedAt});
+  GetL({
+    this.id,
+    this.name,
+    this.createdAt,
+    this.updatedAt,
+    this.imagePath,
+    this.pricePerHour,
+    this.imageUrl,
+  });
 
-  factory Lapangan.fromJson(Map<String, dynamic> json) => Lapangan(
+  factory GetL.fromJson(Map<String, dynamic> json) => GetL(
     id: json["id"],
     name: json["name"],
     createdAt:
         json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt:
         json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    imagePath: json["image_path"],
+    pricePerHour: json["price_per_hour"],
+    imageUrl: json["image_url"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -54,5 +66,8 @@ class Lapangan {
     "name": name,
     "created_at": createdAt?.toIso8601String(),
     "updated_at": updatedAt?.toIso8601String(),
+    "image_path": imagePath,
+    "price_per_hour": pricePerHour,
+    "image_url": imageUrl,
   };
 }
