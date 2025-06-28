@@ -15,6 +15,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   UserServis userServis = UserServis();
+  late Future<List<GetL>> _futureLapangan;
+  TextEditingController _searchController = TextEditingController();
+  String searchKeyword = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _futureLapangan = userServis.getLapangan();
+  }
+
+  Future<void> refreshData() async {
+    setState(() {
+      _futureLapangan = userServis.getLapangan();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,45 +66,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     leading: Icon(Icons.logout),
                     title: Text('Logout'),
                     onTap: () {
-                      setState(() {
-                        showDialog(
-                          context: context,
-                          builder:
-                              (context) => AlertDialog(
-                                title: Text('Apakah anda yakin ingin\nlogout?'),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Text(
-                                      "Tidak",
-                                      style: TextStyle(
-                                        color: Color(0xff039EFD),
-                                      ),
-                                    ),
-                                  ),
-
-                                  TextButton(
-                                    onPressed: () async {
-                                      await SharedPref.removeToken();
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Login(),
-                                        ),
-                                        (route) => false,
-                                      );
-                                    },
-                                    child: Text(
-                                      "Iya",
-                                      style: TextStyle(color: Colors.red),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                        );
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                          title: Text('Apakah anda yakin ingin\nlogout?'),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text("Tidak", style: TextStyle(color: Color(0xff039EFD))),
+                            ),
+                            TextButton(
+                              onPressed: () async {
+                                await SharedPref.removeToken();
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => Login()),
+                                  (route) => false,
+                                );
+                              },
+                              child: Text("Iya", style: TextStyle(color: Colors.red)),
+                            ),
+                          ],
+                        ),
+                      );
                     },
                   ),
                 ],
@@ -97,148 +97,181 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(height: 16),
-            CarouselSlider(
-              options: CarouselOptions(
-                height: 180,
-                autoPlay: true,
-                enlargeCenterPage: true,
-                viewportFraction: 0.85,
-                aspectRatio: 16 / 9,
-                autoPlayInterval: Duration(seconds: 3),
-              ),
-              items:
-                  [
-                    'assets/image/banner1.jpg',
-                    'assets/image/banner2.jpg',
-                    'assets/image/banner3.jpg',
-                    'assets/image/banner4.jpg',
-                  ].map((imagePath) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
-                        );
-                      },
-                    );
-                  }).toList(),
-            ),
-            SizedBox(height: 16),
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Welcome!',
-                    style: TextStyle(fontSize: 24, fontFamily: 'Gilroy'),
-                  ),
-                  Text(
-                    'Mau main futsal dimana hari ini?\n atau punya bookingan lapangan',
-                    textAlign: TextAlign.justify,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 16),
-            FutureBuilder<List<GetL>>(
-              future: userServis.getLapangan(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("Error: ${snapshot.error}"));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text("Lapangan tidak ditemukan"));
-                }
-
-                final lapanganList = snapshot.data!;
-
-                return Padding(
-                  padding: EdgeInsets.all(12),
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: lapanganList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final lapangan = lapanganList[index];
-                      return Card(
-                        color: Colors.white,
-                        elevation: 5,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+      body: RefreshIndicator(
+        onRefresh: refreshData,
+        child: SingleChildScrollView(
+          physics: AlwaysScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 16),
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 180,
+                  autoPlay: true,
+                  enlargeCenterPage: true,
+                  viewportFraction: 0.85,
+                  aspectRatio: 16 / 9,
+                  autoPlayInterval: Duration(seconds: 3),
+                ),
+                items: [
+                  'assets/image/banner1.jpg',
+                  'assets/image/banner2.jpg',
+                  'assets/image/banner3.jpg',
+                  'assets/image/banner4.jpg',
+                ].map((imagePath) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
                         ),
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child:
-                                    lapangan.imageUrl != null
-                                        ? Image.network(
+                      );
+                    },
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 16),
+              Center(
+                child: Column(
+                  children: [
+                    Text(
+                      'Welcome!',
+                      style: TextStyle(fontSize: 24, fontFamily: 'Gilroy'),
+                    ),
+                    Text(
+                      'Mau main futsal dimana hari ini?\natau punya bookingan lapangan',
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: (value) {
+                    setState(() {
+                      searchKeyword = value.toLowerCase();
+                    });
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Cari nama lapangan...',
+                    prefixIcon: Icon(Icons.search),
+                    filled: true,
+                    fillColor: Colors.grey[100],
+                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 16),
+              FutureBuilder<List<GetL>>(
+                future: _futureLapangan,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text("Lapangan tidak ditemukan"));
+                  }
+
+                  final lapanganList = snapshot.data!
+                      .where((lap) =>
+                          lap.name?.toLowerCase().contains(searchKeyword) ?? false)
+                      .toList();
+
+                  if (lapanganList.isEmpty) {
+                    return Center(child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text("Tidak ada lapangan yang di cari."),
+                    ));
+                  }
+
+                  return Padding(
+                    padding: EdgeInsets.all(12),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: lapanganList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        final lapangan = lapanganList[index];
+                        return Card(
+                          color: Colors.white,
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: lapangan.imageUrl != null
+                                      ? Image.network(
                                           lapangan.imageUrl!,
                                           height: 120,
                                           width: 90,
                                           fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) =>
-                                                  Icon(
-                                                    Icons.broken_image,
-                                                    size: 90,
-                                                  ),
+                                          errorBuilder: (context, error, stackTrace) =>
+                                              Icon(Icons.broken_image, size: 90),
                                         )
-                                        : Container(
+                                      : Container(
                                           height: 120,
                                           width: 90,
                                           color: Colors.grey[300],
                                           child: Icon(Icons.image, size: 40),
                                         ),
+                                ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(12.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    lapangan.name ?? 'Tanpa Nama',
-                                    style: const TextStyle(
-                                      fontFamily: 'Gilroy',
-                                      fontSize: 16,
-                                      color: Colors.black,
+                              Padding(
+                                padding: EdgeInsets.all(12.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      lapangan.name ?? 'Tanpa Nama',
+                                      style: const TextStyle(
+                                        fontFamily: 'Gilroy',
+                                        fontSize: 16,
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Rp ${lapangan.pricePerHour ?? '-'} / jam',
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey,
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Rp ${lapangan.pricePerHour ?? '-'} / jam',
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
                                     ),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-          ],
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 class Endpoint {
-  static const String baseUrl = "https://appfutsal.mobileprojp.com";
-  static const String baseUrlApi = "$baseUrl/api";
-  static const String register = "$baseUrlApi/register";
-  static const String login = "$baseUrlApi/login";
-  static const String add = "$baseUrlApi/fields";
+  static const baseUrl = "https://appfutsal.mobileprojp.com/api";
+  static const register = '$baseUrl/register';
+  static const login = '$baseUrl/login';
+  static const add = '$baseUrl/fields'; 
+  static const fields = '$baseUrl/fields'; 
 }

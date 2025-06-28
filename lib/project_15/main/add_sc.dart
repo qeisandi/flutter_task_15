@@ -26,55 +26,57 @@ class _AddScState extends State<AddSc> {
           style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                _buildDropdownField(
-                  'Pilih Lapangan',
-                  ['Lapangan A', 'Lapangan B'],
-                  (val) {
-                    setState(() => selectedField = val);
-                  },
-                  selectedField,
-                ),
-                SizedBox(height: 16),
-                _buildDatePicker(),
-                SizedBox(height: 16),
-                _buildTimePicker(
-                  'Waktu Mulai',
-                  (time) => setState(() => startTime = time),
-                  startTime,
-                ),
-                SizedBox(height: 16),
-                _buildTimePicker(
-                  'Waktu Selesai',
-                  (time) => setState(() => endTime = time),
-                  endTime,
-                ),
-                SizedBox(height: 16),
-                _buildDropdownField('Status', statusList, (val) {
-                  setState(() => selectedStatus = val);
-                }, selectedStatus),
-                SizedBox(height: 24),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xff039EFD),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Card(
+            elevation: 4,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  _buildDropdownField(
+                    'Pilih Lapangan',
+                    ['Lapangan A', 'Lapangan B'],
+                    (val) {
+                      setState(() => selectedField = val);
+                    },
+                    selectedField,
                   ),
-                  onPressed: () {},
-                  child: Text(
-                    'TAMBAH JADWAL',
-                    style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+                  SizedBox(height: 16),
+                  _buildDatePicker(),
+                  SizedBox(height: 16),
+                  _buildTimePicker(
+                    'Waktu Mulai',
+                    (time) => setState(() => startTime = time),
+                    startTime,
                   ),
-                ),
-              ],
+                  SizedBox(height: 16),
+                  _buildTimePicker(
+                    'Waktu Selesai',
+                    (time) => setState(() => endTime = time),
+                    endTime,
+                  ),
+                  SizedBox(height: 16),
+                  _buildDropdownField('Status', statusList, (val) {
+                    setState(() => selectedStatus = val);
+                  }, selectedStatus),
+                  SizedBox(height: 24),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xff039EFD),
+                    ),
+                    onPressed: () {},
+                    child: Text(
+                      'TAMBAH JADWAL',
+                      style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

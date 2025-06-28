@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
 import 'package:flutter_task_15/project_15/bottomNav/bottom_nav.dart';
@@ -9,9 +10,6 @@ import 'package:flutter_task_15/project_15/main/book_sc.dart';
 import 'package:flutter_task_15/project_15/main/dashboard.dart';
 import 'package:flutter_task_15/project_15/splas/splas.dart'; // pastikan path-nya benar
 
-void main() {
-  runApp(const MyApp());
-}
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
