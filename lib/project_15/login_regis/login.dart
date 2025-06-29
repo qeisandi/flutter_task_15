@@ -38,7 +38,6 @@ class _LoginState extends State<Login> {
       final token = res['data']['token'];
       await SharedPref.saveToken(token);
 
-      // Tampilkan snackbar berhasil
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Berhasil Login'),
@@ -46,7 +45,6 @@ class _LoginState extends State<Login> {
         ),
       );
 
-      // Pindah ke HomeScreen setelah login berhasil
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => const BottomNavScreen()),

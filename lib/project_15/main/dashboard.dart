@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_task_15/project_15/Helper/api.dart';
 import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
 import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
@@ -29,6 +30,77 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _futureLapangan = userServis.getLapangan();
     });
+  }
+
+  void _showUpdateDialog(GetL lapangan) {
+    final TextEditingController nameController = TextEditingController(text: lapangan.name);
+    final TextEditingController priceController = TextEditingController(text: lapangan.pricePerHour?.toString() ?? '');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          title: Text('Edit Lapangan', style: TextStyle(fontFamily: 'Gilroy')),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Nama Lapangan',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+                SizedBox(height: 12),
+                TextField(
+                  controller: priceController,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  decoration: InputDecoration(
+                    labelText: 'Harga per Jam',
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('Batal', style: TextStyle(color: Colors.red)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xff039EFD),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+             onPressed: () async {
+  try {
+    await userServis.updateProfile(
+      name: nameController.text,
+      price: int.tryParse(priceController.text) ?? 0,
+    );
+    Navigator.pop(context);
+    refreshData();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Lapangan berhasil diperbarui")),
+    );
+  } catch (e) {
+    Navigator.pop(context);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Gagal update: $e")),
+    );
+  }
+},
+
+              child: Text('Simpan',style: TextStyle(color: Colors.white),),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -150,7 +222,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 16),
-
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
@@ -173,7 +244,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-
               SizedBox(height: 16),
               FutureBuilder<List<GetL>>(
                 future: _futureLapangan,
@@ -187,15 +257,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   final lapanganList = snapshot.data!
-                      .where((lap) =>
-                          lap.name?.toLowerCase().contains(searchKeyword) ?? false)
+                      .where((lap) => lap.name?.toLowerCase().contains(searchKeyword) ?? false)
                       .toList();
 
                   if (lapanganList.isEmpty) {
-                    return Center(child: Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: Text("Tidak ada lapangan yang di cari."),
-                    ));
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text("Tidak ada lapangan yang dicari."),
+                      ),
+                    );
                   }
 
                   return Padding(
@@ -236,31 +307,37 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.all(12.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      lapangan.name ?? 'Tanpa Nama',
-                                      style: const TextStyle(
-                                        fontFamily: 'Gilroy',
-                                        fontSize: 16,
-                                        color: Colors.black,
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        lapangan.name ?? 'Tanpa Nama',
+                                        style: const TextStyle(
+                                          fontFamily: 'Gilroy',
+                                          fontSize: 16,
+                                          color: Colors.black,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      'Rp ${lapangan.pricePerHour ?? '-'} / jam',
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
+                                      SizedBox(height: 4),
+                                      Text(
+                                        'Rp ${lapangan.pricePerHour ?? '-'} / jam',
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.edit, color: Color(0xff039EFD)),
+                                onPressed: () => _showUpdateDialog(lapangan),
                               ),
                             ],
                           ),
