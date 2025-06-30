@@ -2,28 +2,24 @@ class UpdateLapangan {
   String? message;
   Update? data;
 
-  UpdateLapangan({
-    this.message,
-    this.data,
-  });
+  UpdateLapangan({this.message, this.data});
 
-  factory UpdateLapangan.fromJson(Map<String, dynamic> json) => UpdateLapangan(
-        message: json["message"],
-        data: json["data"] == null ? null : Update.fromJson(json["data"]),
-      );
+  factory UpdateLapangan.fromJson(Map<String, dynamic> json) {
+    return UpdateLapangan(
+      message: json["message"],
+      data: json["data"] != null ? Update.fromJson(json["data"]) : null,
+    );
+  }
 
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "data": data?.toJson(),
-      };
+  Map<String, dynamic> toJson() => {"message": message, "data": data?.toJson()};
 }
 
 class Update {
   int? id;
   String? name;
   int? pricePerHour;
-  dynamic imageUrl;
-  dynamic imagePath;
+  String? imageUrl;
+  String? imagePath;
 
   Update({
     this.id,
@@ -33,21 +29,28 @@ class Update {
     this.imagePath,
   });
 
-  factory Update.fromJson(Map<String, dynamic> json) => Update(
-        id: json["id"],
-        name: json["name"],
-        pricePerHour: json["price_per_hour"] is int
-            ? json["price_per_hour"]
-            : int.tryParse(json["price_per_hour"].toString()),
-        imageUrl: json["image_url"],
-        imagePath: json["image_path"],
-      );
+  factory Update.fromJson(Map<String, dynamic> json) {
+    return Update(
+      id: json["id"],
+      name: json["name"],
+      pricePerHour: _parseInt(json["price_per_hour"]),
+      imageUrl: json["image_url"]?.toString(),
+      imagePath: json["image_path"]?.toString(),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "price_per_hour": pricePerHour,
-        "image_url": imageUrl,
-        "image_path": imagePath,
-      };
+    "id": id,
+    "name": name,
+    "price_per_hour": pricePerHour,
+    "image_url": imageUrl,
+    "image_path": imagePath,
+  };
+
+  // Helper agar parsing int selalu aman
+  static int? _parseInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    return int.tryParse(value.toString());
+  }
 }

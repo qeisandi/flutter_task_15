@@ -1,66 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_task_15/project_15/Helper/servis/main_servis.dart';
 
-class BookSc extends StatelessWidget {
+class BookSc extends StatefulWidget {
   static const String id = "/book_sc";
+
   const BookSc({super.key});
 
-  final List<Map<String, String>> dummySchedule = const [
-    {
-      'field': 'Lapangan A',
-      'date': '25/06/2025',
-      'time': '10:00 - 12:00',
-      'price': 'Rp 150.000',
-      'status': 'Available',
-    },
-    {
-      'field': 'Lapangan B',
-      'date': '26/06/2025',
-      'time': '14:00 - 16:00',
-      'price': 'Rp 200.000',
-      'status': 'Available',
-    },
-  ];
+  @override
+  State<BookSc> createState() => _BookScState();
+}
+
+class _BookScState extends State<BookSc> {
+  final TextEditingController scheduleIdController = TextEditingController();
+  bool isLoading = false;
+
+  Future<void> postBooking() async {
+    final scheduleId = int.tryParse(scheduleIdController.text);
+    if (scheduleId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Masukkan Schedule ID yang valid')),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    try {
+      final result = await UserServis().bookSchedule(scheduleId);
+      final message = result['message'] ?? 'Booking berhasil';
+
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(message)));
+        scheduleIdController.clear();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Terjadi kesalahan: $e')));
+      }
+    } finally {
+      if (mounted) setState(() => isLoading = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    scheduleIdController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xff039EFD),
-        title: Text(
+        title: const Text(
           'Booking Jadwal',
           style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
+        backgroundColor: const Color(0xff039EFD),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.all(12),
-        itemCount: dummySchedule.length,
-        itemBuilder: (context, index) {
-          final item = dummySchedule[index];
-          return Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: EdgeInsets.only(bottom: 12),
-            child: ListTile(
-              title: Text(
-                '${item['field']} - ${item['date']}',
-                style: TextStyle(fontFamily: 'Gilroy'),
+      body: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            TextField(
+              controller: scheduleIdController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: InputDecoration(
+                labelText: 'Masukkan Schedule ID',
+                prefixIcon: const Icon(Icons.calendar_today),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                filled: true,
+                fillColor: Colors.grey[100],
               ),
-              subtitle: Text('${item['time']} • ${item['price']}'),
-              trailing: ElevatedButton(
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              height: 48,
+              child: ElevatedButton(
+                onPressed: isLoading ? null : postBooking,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff039EFD),
+                  backgroundColor: const Color(0xff039EFD),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
-                onPressed: () {},
-                child: Text(
-                  'BOOK',
-                  style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
-                ),
+                child:
+                    isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                          'BOOK NOW',
+                          style: TextStyle(
+                            fontFamily: 'Gilroy',
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

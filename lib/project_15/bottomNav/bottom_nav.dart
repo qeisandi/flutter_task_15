@@ -3,6 +3,7 @@ import 'package:flutter_task_15/project_15/main/add.dart';
 import 'package:flutter_task_15/project_15/main/add_sc.dart';
 import 'package:flutter_task_15/project_15/main/book_sc.dart';
 import 'package:flutter_task_15/project_15/main/dashboard.dart';
+import 'package:flutter_task_15/project_15/main/edit.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -14,7 +15,13 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [HomeScreen(), Add(), BookSc(), AddSc()];
+  final List<Widget> _pages = [
+    HomeScreen(),
+    Add(),
+    EditScreen(),
+    BookSc(),
+    AddSc(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +41,8 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
           BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Tambah'),
+          BottomNavigationBarItem(icon: Icon(Icons.edit), label: 'Edit'),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.add_location_alt_outlined),
             label: 'Book Schedule',

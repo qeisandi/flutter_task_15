@@ -1,10 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_task_15/project_15/Helper/api.dart';
 import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
 import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
+import 'package:flutter_task_15/project_15/Helper/servis/main_servis.dart';
 import 'package:flutter_task_15/project_15/login_regis/login.dart';
+import 'package:flutter_task_15/project_15/main/detail.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "/home_screen";
@@ -17,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   UserServis userServis = UserServis();
   late Future<List<GetL>> _futureLapangan;
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String searchKeyword = '';
 
   @override
@@ -32,85 +32,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _showUpdateDialog(GetL lapangan) {
-    final TextEditingController nameController = TextEditingController(text: lapangan.name);
-    final TextEditingController priceController = TextEditingController(text: lapangan.pricePerHour?.toString() ?? '');
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          title: Text('Edit Lapangan', style: TextStyle(fontFamily: 'Gilroy')),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Nama Lapangan',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-                SizedBox(height: 12),
-                TextField(
-                  controller: priceController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  decoration: InputDecoration(
-                    labelText: 'Harga per Jam',
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Batal', style: TextStyle(color: Colors.red)),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xff039EFD),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              ),
-             onPressed: () async {
-  try {
-    await userServis.updateProfile(
-      name: nameController.text,
-      price: int.tryParse(priceController.text) ?? 0,
-    );
-    Navigator.pop(context);
-    refreshData();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Lapangan berhasil diperbarui")),
-    );
-  } catch (e) {
-    Navigator.pop(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text("Gagal update: $e")),
-    );
-  }
-},
-
-              child: Text('Simpan',style: TextStyle(color: Colors.white),),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Color(0xff039EFD),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: const Color(0xff039EFD),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Home',
           style: TextStyle(
             fontFamily: 'Gilroy',
@@ -123,43 +52,54 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Column(
                 children: [
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   Image.asset('assets/image/logo2.png', scale: 5),
-                  SizedBox(height: 24),
+                  const SizedBox(height: 24),
                   ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text('Profile'),
+                    leading: const Icon(Icons.account_circle),
+                    title: const Text('Profile'),
                     onTap: () {},
                   ),
                   ListTile(
-                    leading: Icon(Icons.logout),
-                    title: Text('Logout'),
+                    leading: const Icon(Icons.logout),
+                    title: const Text('Logout'),
                     onTap: () {
                       showDialog(
                         context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text('Apakah anda yakin ingin\nlogout?'),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text("Tidak", style: TextStyle(color: Color(0xff039EFD))),
+                        builder:
+                            (context) => AlertDialog(
+                              title: const Text(
+                                'Apakah anda yakin ingin\nlogout?',
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text(
+                                    "Tidak",
+                                    style: TextStyle(color: Color(0xff039EFD)),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    await SharedPref.removeToken();
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Login(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  },
+                                  child: Text(
+                                    "Iya",
+                                    style: TextStyle(color: Colors.red),
+                                  ),
+                                ),
+                              ],
                             ),
-                            TextButton(
-                              onPressed: () async {
-                                await SharedPref.removeToken();
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => Login()),
-                                  (route) => false,
-                                );
-                              },
-                              child: Text("Iya", style: TextStyle(color: Colors.red)),
-                            ),
-                          ],
-                        ),
                       );
                     },
                   ),
@@ -172,11 +112,43 @@ class _HomeScreenState extends State<HomeScreen> {
       body: RefreshIndicator(
         onRefresh: refreshData,
         child: SingleChildScrollView(
-          physics: AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const SizedBox(height: 16),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 28,
+                      backgroundImage: AssetImage('assets/image/cat.jpg'),
+                    ),
+                    SizedBox(width: 12),
+                    Column(
+                      children: [
+                        Text(
+                          'Halo, User!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Gilroy',
+                          ),
+                        ),
+                        Text(
+                          '12345678',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
               SizedBox(height: 16),
+
               CarouselSlider(
                 options: CarouselOptions(
                   height: 180,
@@ -186,33 +158,39 @@ class _HomeScreenState extends State<HomeScreen> {
                   aspectRatio: 16 / 9,
                   autoPlayInterval: Duration(seconds: 3),
                 ),
-                items: [
-                  'assets/image/banner1.jpg',
-                  'assets/image/banner2.jpg',
-                  'assets/image/banner3.jpg',
-                  'assets/image/banner4.jpg',
-                ].map((imagePath) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.asset(
-                          imagePath,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
+                items:
+                    [
+                      'assets/image/banner1.jpg',
+                      'assets/image/banner5.jpg',
+                      'assets/image/banner6.jpg',
+                      'assets/image/banner4.jpg',
+                      'assets/image/banner7.jpg',
+                    ].map((imagePath) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.asset(
+                              imagePath,
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                            ),
+                          );
+                        },
                       );
-                    },
-                  );
-                }).toList(),
+                    }).toList(),
               ),
+
               SizedBox(height: 16),
               Center(
                 child: Column(
-                  children: [
+                  children: const [
                     Text(
-                      'Welcome!',
-                      style: TextStyle(fontSize: 24, fontFamily: 'Gilroy'),
+                      'WELCOME!',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       'Mau main futsal dimana hari ini?\natau punya bookingan lapangan',
@@ -222,8 +200,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 16),
+
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (value) {
@@ -236,7 +215,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     prefixIcon: Icon(Icons.search),
                     filled: true,
                     fillColor: Colors.grey[100],
-                    contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 0,
+                      horizontal: 16,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -245,25 +227,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               SizedBox(height: 16),
+
               FutureBuilder<List<GetL>>(
                 future: _futureLapangan,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return Center(child: Text("Lapangan tidak ditemukan"));
                   }
 
-                  final lapanganList = snapshot.data!
-                      .where((lap) => lap.name?.toLowerCase().contains(searchKeyword) ?? false)
-                      .toList();
+                  final lapanganList =
+                      snapshot.data!
+                          .where(
+                            (lap) =>
+                                lap.name?.toLowerCase().contains(
+                                  searchKeyword,
+                                ) ??
+                                false,
+                          )
+                          .toList();
 
                   if (lapanganList.isEmpty) {
                     return Center(
                       child: Padding(
-                        padding: const EdgeInsets.all(20.0),
+                        padding: EdgeInsets.all(20.0),
                         child: Text("Tidak ada lapangan yang dicari."),
                       ),
                     );
@@ -277,69 +267,92 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: lapanganList.length,
                       itemBuilder: (BuildContext context, int index) {
                         final lapangan = lapanganList[index];
-                        return Card(
-                          color: Colors.white,
-                          elevation: 5,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(12),
-                                  child: lapangan.imageUrl != null
-                                      ? Image.network(
-                                          lapangan.imageUrl!,
-                                          height: 120,
-                                          width: 90,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              Icon(Icons.broken_image, size: 90),
-                                        )
-                                      : Container(
-                                          height: 120,
-                                          width: 90,
-                                          color: Colors.grey[300],
-                                          child: Icon(Icons.image, size: 40),
-                                        ),
-                                ),
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (_) =>
+                                        DetailLapanganPage(lapangan: lapangan),
                               ),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 8),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        lapangan.name ?? 'Tanpa Nama',
-                                        style: const TextStyle(
-                                          fontFamily: 'Gilroy',
-                                          fontSize: 16,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      SizedBox(height: 4),
-                                      Text(
-                                        'Rp ${lapangan.pricePerHour ?? '-'} / jam',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          color: Colors.grey,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ],
+                            );
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.only(bottom: 10),
+                            child: Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child:
+                                        lapangan.imageUrl != null
+                                            ? Image.network(
+                                              lapangan.imageUrl!,
+                                              height: 120,
+                                              width: 90,
+                                              fit: BoxFit.cover,
+                                              errorBuilder:
+                                                  (
+                                                    context,
+                                                    error,
+                                                    stackTrace,
+                                                  ) => Icon(
+                                                    Icons.broken_image,
+                                                    size: 90,
+                                                  ),
+                                            )
+                                            : Container(
+                                              height: 120,
+                                              width: 90,
+                                              color: Colors.grey[300],
+                                              child: Icon(
+                                                Icons.image,
+                                                size: 40,
+                                              ),
+                                            ),
                                   ),
                                 ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.edit, color: Color(0xff039EFD)),
-                                onPressed: () => _showUpdateDialog(lapangan),
-                              ),
-                            ],
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 12.0,
+                                      horizontal: 8,
+                                    ),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          lapangan.name ?? 'Tanpa Nama',
+                                          style: TextStyle(
+                                            fontFamily: 'Gilroy',
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Rp ${lapangan.pricePerHour ?? '-'} / jam',
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         );
                       },
