@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
+import 'package:futsal_56/project_15/Helper/model/model_get.dart';
 
 class DetailLapanganPage extends StatelessWidget {
   final GetL lapangan;

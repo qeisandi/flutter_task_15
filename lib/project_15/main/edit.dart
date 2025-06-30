@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
-import 'package:flutter_task_15/project_15/Helper/servis/main_servis.dart';
-import 'package:flutter_task_15/project_15/main/detail_dua.dart';
+import 'package:futsal_56/project_15/Helper/model/model_get.dart';
+import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
+import 'package:futsal_56/project_15/main/detail_dua.dart';
 
 class EditScreen extends StatefulWidget {
   static const String id = "/home_screen";
@@ -240,16 +240,16 @@ class _EditScreenState extends State<EditScreen> {
                   }
 
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding:  EdgeInsets.symmetric(horizontal: 12),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
                       itemCount: lapanganList.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        childAspectRatio: 0.8,
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 20,
+                        childAspectRatio: 0.64,
                       ),
                       itemBuilder: (context, index) {
                         final lapangan = lapanganList[index];

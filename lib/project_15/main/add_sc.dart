@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
-import 'package:flutter_task_15/project_15/Helper/servis/main_servis.dart';
-import 'package:flutter_task_15/project_15/Helper/servis/schedule_servis.dart';
+import 'package:futsal_56/project_15/Helper/model/model_get.dart';
+import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
+import 'package:futsal_56/project_15/Helper/servis/schedule_servis.dart';
 
 class AddSc extends StatefulWidget {
   static const String id = "/add_sd";

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart'; // Ganti sesuai lokasi SharedPref
-import 'package:flutter_task_15/project_15/login_regis/login.dart';
-import 'package:flutter_task_15/project_15/main/dashboard.dart'; // Halaman setelah login
+import 'package:futsal_56/project_15/Helper/prefrs/pref_api.dart'; // Ganti sesuai lokasi SharedPref
+import 'package:futsal_56/project_15/login_regis/login.dart';
+import 'package:futsal_56/project_15/main/dashboard.dart'; // Halaman setelah login
 
 class Splash extends StatefulWidget {
   const Splash({super.key});

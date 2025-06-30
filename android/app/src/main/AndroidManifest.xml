@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
 
     <application
-        android:label="flutter_task_15"
+        android:label="futsal_56"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

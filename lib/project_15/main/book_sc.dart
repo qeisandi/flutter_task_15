@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_task_15/project_15/Helper/servis/main_servis.dart';
+import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
 
 class BookSc extends StatefulWidget {
   static const String id = "/book_sc";
@@ -103,7 +103,6 @@ class _BookScState extends State<BookSc> {
                           style: TextStyle(
                             fontFamily: 'Gilroy',
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
                             fontSize: 16,
                           ),
                         ),

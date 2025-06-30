@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_task_15/project_15/main/add.dart';
-import 'package:flutter_task_15/project_15/main/add_sc.dart';
-import 'package:flutter_task_15/project_15/main/book_sc.dart';
-import 'package:flutter_task_15/project_15/main/dashboard.dart';
-import 'package:flutter_task_15/project_15/main/edit.dart';
+import 'package:futsal_56/project_15/main/add.dart';
+import 'package:futsal_56/project_15/main/add_sc.dart';
+import 'package:futsal_56/project_15/main/book_sc.dart';
+import 'package:futsal_56/project_15/main/dashboard.dart';
+import 'package:futsal_56/project_15/main/edit.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});

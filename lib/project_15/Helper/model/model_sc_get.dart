@@ -21,14 +21,14 @@ class Schedule {
 
   factory Schedule.fromJson(Map<String, dynamic> json) {
     return Schedule(
-      id: json['id'],
-      fieldId: json['field_id'],
-      date: json['date'],
-      startTime: json['start_time'],
-      endTime: json['end_time'],
-      isBooked: json['is_booked'],
-      createdAt: json['created_at'],
-      updatedAt: json['updated_at'],
+      id: int.tryParse(json['id'].toString()) ?? 0,
+      fieldId: int.tryParse(json['field_id'].toString()) ?? 0,
+      date: json['date'].toString(),
+      startTime: json['start_time'].toString(),
+      endTime: json['end_time'].toString(),
+      isBooked: int.tryParse(json['is_booked'].toString()) ?? 0,
+      createdAt: json['created_at'].toString(),
+      updatedAt: json['updated_at'].toString(),
     );
   }
 }

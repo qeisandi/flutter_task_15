@@ -1,8 +1,8 @@
 import 'dart:convert';
 
-import 'package:flutter_task_15/project_15/Helper/endpoint.dart';
-import 'package:flutter_task_15/project_15/Helper/model/model_sc.dart';
-import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
+import 'package:futsal_56/project_15/Helper/endpoint.dart';
+import 'package:futsal_56/project_15/Helper/model/model_sc.dart';
+import 'package:futsal_56/project_15/Helper/prefrs/pref_api.dart';
 import 'package:http/http.dart' as http;
 
 class ScheduleServis {

@@ -1,15 +1,14 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_task_15/project_15/Helper/model/model_get.dart';
-import 'package:flutter_task_15/project_15/Helper/prefrs/pref_api.dart';
-import 'package:flutter_task_15/project_15/Helper/servis/main_servis.dart';
-import 'package:flutter_task_15/project_15/login_regis/login.dart';
-import 'package:flutter_task_15/project_15/main/detail.dart';
+import 'package:futsal_56/project_15/Helper/model/model_get.dart';
+import 'package:futsal_56/project_15/Helper/prefrs/pref_api.dart';
+import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
+import 'package:futsal_56/project_15/login_regis/login.dart';
+import 'package:futsal_56/project_15/main/detail.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "/home_screen";
   const HomeScreen({super.key});
-
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -36,10 +35,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: const Color(0xff039EFD),
+        iconTheme:  IconThemeData(color: Colors.white),
+        backgroundColor:  Color(0xff039EFD),
         centerTitle: true,
-        title: const Text(
+        title:  Text(
           'Home',
           style: TextStyle(
             fontFamily: 'Gilroy',
@@ -51,60 +50,41 @@ class _HomeScreenState extends State<HomeScreen> {
       drawer: Drawer(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                children: [
-                  const SizedBox(height: 40),
-                  Image.asset('assets/image/logo2.png', scale: 5),
-                  const SizedBox(height: 24),
-                  ListTile(
-                    leading: const Icon(Icons.account_circle),
-                    title: const Text('Profile'),
-                    onTap: () {},
+            SizedBox(height: 20,),
+            Image.asset('assets/image/logo2.png',scale: 5,),
+            ListTile(
+              leading: const Icon(Icons.account_circle),
+              title: const Text('Profile'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: const Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Apakah anda yakin ingin\nlogout?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text("Tidak", style: TextStyle(color: Color(0xff039EFD))),
+                      ),
+                      TextButton(
+                        onPressed: () async {
+                          await SharedPref.removeToken();
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => Login()),
+                            (route) => false,
+                          );
+                        },
+                        child: const Text("Iya", style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.logout),
-                    title: const Text('Logout'),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder:
-                            (context) => AlertDialog(
-                              title: const Text(
-                                'Apakah anda yakin ingin\nlogout?',
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text(
-                                    "Tidak",
-                                    style: TextStyle(color: Color(0xff039EFD)),
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    await SharedPref.removeToken();
-                                    Navigator.pushAndRemoveUntil(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => Login(),
-                                      ),
-                                      (route) => false,
-                                    );
-                                  },
-                                  child: Text(
-                                    "Iya",
-                                    style: TextStyle(color: Colors.red),
-                                  ),
-                                ),
-                              ],
-                            ),
-                      );
-                    },
-                  ),
-                ],
-              ),
+                );
+              },
             ),
           ],
         ),
@@ -124,13 +104,14 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CircleAvatar(
                       radius: 28,
-                      backgroundImage: AssetImage('assets/image/cat.jpg'),
+                      backgroundImage: AssetImage('assets/image/profile.jpg'),
                     ),
                     SizedBox(width: 12),
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Halo, User!',
+                          'User',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -138,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Text(
-                          '12345678',
+                          'user@email.com',
                           style: TextStyle(fontSize: 12, color: Colors.grey),
                         ),
                       ],
@@ -158,27 +139,26 @@ class _HomeScreenState extends State<HomeScreen> {
                   aspectRatio: 16 / 9,
                   autoPlayInterval: Duration(seconds: 3),
                 ),
-                items:
-                    [
-                      'assets/image/banner1.jpg',
-                      'assets/image/banner5.jpg',
-                      'assets/image/banner6.jpg',
-                      'assets/image/banner4.jpg',
-                      'assets/image/banner7.jpg',
-                    ].map((imagePath) {
-                      return Builder(
-                        builder: (BuildContext context) {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Image.asset(
-                              imagePath,
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                            ),
-                          );
-                        },
+                items: [
+                  'assets/image/banner1.jpg',
+                  'assets/image/banner5.jpg',
+                  'assets/image/banner6.jpg',
+                  'assets/image/banner4.jpg',
+                  'assets/image/banner7.jpg',
+                ].map((imagePath) {
+                  return Builder(
+                    builder: (BuildContext context) {
+                      return ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          imagePath,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
                       );
-                    }).toList(),
+                    },
+                  );
+                }).toList(),
               ),
 
               SizedBox(height: 16),
@@ -239,16 +219,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     return Center(child: Text("Lapangan tidak ditemukan"));
                   }
 
-                  final lapanganList =
-                      snapshot.data!
-                          .where(
-                            (lap) =>
-                                lap.name?.toLowerCase().contains(
-                                  searchKeyword,
-                                ) ??
-                                false,
-                          )
-                          .toList();
+                  final lapanganList = snapshot.data!
+                      .where(
+                        (lap) => lap.name?.toLowerCase().contains(searchKeyword) ?? false,
+                      )
+                      .toList();
 
                   if (lapanganList.isEmpty) {
                     return Center(
@@ -272,9 +247,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder:
-                                    (_) =>
-                                        DetailLapanganPage(lapangan: lapangan),
+                                builder: (_) => DetailLapanganPage(lapangan: lapangan),
                               ),
                             );
                           },
@@ -291,32 +264,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   padding: EdgeInsets.all(8.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
-                                    child:
-                                        lapangan.imageUrl != null
-                                            ? Image.network(
-                                              lapangan.imageUrl!,
-                                              height: 120,
-                                              width: 90,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (
-                                                    context,
-                                                    error,
-                                                    stackTrace,
-                                                  ) => Icon(
-                                                    Icons.broken_image,
-                                                    size: 90,
-                                                  ),
-                                            )
-                                            : Container(
-                                              height: 120,
-                                              width: 90,
-                                              color: Colors.grey[300],
-                                              child: Icon(
-                                                Icons.image,
-                                                size: 40,
-                                              ),
-                                            ),
+                                    child: lapangan.imageUrl != null
+                                        ? Image.network(
+                                            lapangan.imageUrl!,
+                                            height: 120,
+                                            width: 90,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                Icon(Icons.broken_image, size: 90),
+                                          )
+                                        : Container(
+                                            height: 120,
+                                            width: 90,
+                                            color: Colors.grey[300],
+                                            child: Icon(Icons.image, size: 40),
+                                          ),
                                   ),
                                 ),
                                 Expanded(
@@ -326,8 +288,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       horizontal: 8,
                                     ),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           lapangan.name ?? 'Tanpa Nama',
