@@ -79,7 +79,6 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
               final booking = bookings[index];
               final field = booking.schedule.field;
 
-              // Bangun URL gambar jika tersedia
               final String? imageUrl =
                   field.imagePath != null && field.imagePath!.isNotEmpty
                       ? 'https://appfutsal.mobileprojp.com/storage/${field.imagePath}'
