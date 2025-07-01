@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:futsal_56/project_15/main/add.dart';
 import 'package:futsal_56/project_15/main/add_sc.dart';
-import 'package:futsal_56/project_15/main/book_sc.dart';
 import 'package:futsal_56/project_15/main/dashboard.dart';
 import 'package:futsal_56/project_15/main/edit.dart';
 
@@ -15,13 +14,7 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    HomeScreen(),
-    Add(),
-    EditScreen(),
-    BookSc(),
-    AddSc(),
-  ];
+  final List<Widget> _pages = [HomeScreen(), Add(), EditScreen(), AddSc()];
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +36,6 @@ class _BottomNavScreenState extends State<BottomNavScreen> {
           BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Tambah'),
           BottomNavigationBarItem(icon: Icon(Icons.edit), label: 'Edit'),
 
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_location_alt_outlined),
-            label: 'Book Schedule',
-          ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month_rounded),
             label: 'Add Schedule',

@@ -5,7 +5,6 @@ import 'package:futsal_56/project_15/login_regis/login.dart';
 import 'package:futsal_56/project_15/login_regis/register.dart';
 import 'package:futsal_56/project_15/main/add.dart';
 import 'package:futsal_56/project_15/main/add_sc.dart';
-import 'package:futsal_56/project_15/main/book_sc.dart';
 import 'package:futsal_56/project_15/main/dashboard.dart';
 import 'package:futsal_56/project_15/splas/splas.dart';
 
@@ -58,7 +57,6 @@ class _MyAppState extends State<MyApp> {
         Login.id: (context) => Login(),
         Add.id: (context) => Add(),
         AddSc.id: (context) => AddSc(),
-        BookSc.id: (context) => BookSc(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.white),

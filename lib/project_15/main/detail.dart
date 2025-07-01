@@ -59,7 +59,7 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
+      builder: (context) => Center(child: CircularProgressIndicator()),
     );
 
     try {
@@ -103,17 +103,17 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
       appBar: AppBar(
         title: Text(
           lapangan.name ?? "Detail Lapangan",
-          style: const TextStyle(fontFamily: 'Gilroy', color: Colors.white),
+          style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
-        backgroundColor: const Color(0xff039EFD),
+        backgroundColor: Color(0xff039EFD),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
+          icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
       body:
           isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? Center(child: CircularProgressIndicator())
               : RefreshIndicator(
                 onRefresh: fetchSchedules,
                 child: ListView(
@@ -135,39 +135,36 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Icon(Icons.image, size: 80),
+                          child: Icon(Icons.image, size: 80),
                         ),
-                    const SizedBox(height: 16),
+                    SizedBox(height: 16),
                     Text(
                       lapangan.name ?? "Tanpa Nama",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Gilroy',
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     Text(
                       'Harga: Rp ${lapangan.pricePerHour ?? "-"} / jam',
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Gilroy',
-                      ),
+                      style: TextStyle(fontSize: 16, fontFamily: 'Gilroy'),
                     ),
-                    const SizedBox(height: 24),
-                    const Text(
+                    SizedBox(height: 24),
+                    Text(
                       'Jadwal Tersedia:',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: 8),
                     schedules.isEmpty
-                        ? const Text("Belum ada jadwal tersedia.")
+                        ? Text("Belum ada jadwal tersedia.")
                         : ListView.builder(
                           shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
+                          physics: NeverScrollableScrollPhysics(),
                           itemCount: schedules.length,
                           itemBuilder: (context, index) {
                             final sc = schedules[index];
@@ -175,7 +172,7 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              margin: const EdgeInsets.symmetric(vertical: 6),
+                              margin: EdgeInsets.symmetric(vertical: 6),
                               child: ListTile(
                                 title: Text(sc.date),
                                 subtitle: Text(
@@ -183,18 +180,16 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
                                 ),
                                 trailing:
                                     sc.isBooked == 1
-                                        ? const Text(
+                                        ? Text(
                                           'Terbooking',
                                           style: TextStyle(color: Colors.red),
                                         )
                                         : ElevatedButton(
                                           onPressed: () => bookNow(sc.id),
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: const Color(
-                                              0xff039EFD,
-                                            ),
+                                            backgroundColor: Color(0xff039EFD),
                                           ),
-                                          child: const Text(
+                                          child: Text(
                                             'Booking',
                                             style: TextStyle(
                                               color: Colors.white,
