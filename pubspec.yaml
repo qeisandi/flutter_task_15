@@ -1,5 +1,6 @@
 name: futsal_56
 description: "A new Flutter project."
+
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -28,9 +29,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
+  cupertino_icons: ^1.0.8
   intl: ^0.20.2
   path_provider: ^2.1.5
   shared_preferences: ^2.5.3
@@ -41,12 +42,20 @@ dependencies:
   permission_handler: ^12.0.0
 
 dev_dependencies:
-  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
+  flutter_lints: ^5.0.0
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
+  # Tambahkan package ini untuk mengganti ikon aplikasi secara otomatis saat build
+  flutter_launcher_icons: ^0.13.1
+
+
+# Pastikan file ikon tersedia di path: assets/icon/icon.png
+flutter_icons:
+  android: true
+  ios: false
+  image_path: "assets/image/logo2.png"
+
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -63,6 +72,7 @@ flutter:
   # https://flutter.dev/to/resolution-aware-images
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
+
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
@@ -72,7 +82,6 @@ flutter:
     - family: Gilroy
       fonts:
         - asset: fonts/Gilroy-Bold.ttf
-        # - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:
