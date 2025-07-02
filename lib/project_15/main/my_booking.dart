@@ -22,7 +22,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff039EFD),
+        backgroundColor: Color(0xff2F5249),
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'My Bookings',

@@ -143,8 +143,9 @@ class UserServis {
         headers: {
           'Accept': 'application/json',
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
         },
-        body: {'name': name, 'price': price.toString()},
+        body: jsonEncode({'name': name, 'price': price}),
       );
 
       if (response.statusCode != 200) {
@@ -153,7 +154,7 @@ class UserServis {
 
       return UpdateLapangan.fromJson(jsonDecode(response.body)).data!;
     } catch (e) {
-      throw Exception("Update profil gagal: $e");
+      throw Exception("Update lapangan gagal: $e");
     }
   }
 

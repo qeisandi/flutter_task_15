@@ -6,6 +6,7 @@ import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
 import 'package:futsal_56/project_15/login_regis/login.dart';
 import 'package:futsal_56/project_15/main/detail.dart';
 import 'package:futsal_56/project_15/main/my_booking.dart';
+import 'package:futsal_56/project_15/main/profile.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = "/home_screen";
@@ -37,10 +38,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Color(0xff039EFD),
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: const Color(0xff2F5249),
         centerTitle: true,
-        title: Text(
+        title: const Text(
           'Home',
           style: TextStyle(
             fontFamily: 'Gilroy',
@@ -48,17 +49,31 @@ class _HomeScreenState extends State<HomeScreen> {
             fontSize: 28,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Fitur Settings belum tersedia")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile()),
+              );
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Image.asset('assets/image/logo2.png', scale: 5),
-            ListTile(
-              leading: const Icon(Icons.account_circle),
-              title: const Text('Profile'),
-              onTap: () {},
-            ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Logout'),
@@ -73,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             onPressed: () => Navigator.pop(context),
                             child: const Text(
                               "Tidak",
-                              style: TextStyle(color: Color(0xff039EFD)),
+                              style: TextStyle(color: Color(0xff73946B)),
                             ),
                           ),
                           TextButton(
@@ -108,39 +123,21 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 16),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
+              const Center(
+                child: Column(
                   children: [
-                    CircleAvatar(
-                      radius: 28,
-                      backgroundImage: AssetImage('assets/image/profile.jpg'),
-                    ),
-                    SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'User',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'Gilroy',
-                          ),
-                        ),
-                        Text(
-                          'user@email.com',
-                          style: TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
+                    Text(
+                      'WELCOME!',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Gilroy',
+                      ),
                     ),
                   ],
                 ),
               ),
-
-              SizedBox(height: 16),
-
+              const SizedBox(height: 16),
               CarouselSlider(
                 options: CarouselOptions(
                   height: 180,
@@ -148,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   enlargeCenterPage: true,
                   viewportFraction: 0.85,
                   aspectRatio: 16 / 9,
-                  autoPlayInterval: Duration(seconds: 3),
+                  autoPlayInterval: const Duration(seconds: 3),
                 ),
                 items:
                     [
@@ -172,29 +169,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     }).toList(),
               ),
-
-              SizedBox(height: 16),
-              Center(
-                child: Column(
-                  children: const [
-                    Text(
-                      'WELCOME!',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      'Mau main futsal dimana hari ini?\natau punya bookingan lapangan',
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 16),
-
+              const SizedBox(height: 16),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TextField(
                   controller: _searchController,
                   onChanged: (value) {
@@ -204,10 +181,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Cari nama lapangan...',
-                    prefixIcon: Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search),
                     filled: true,
                     fillColor: Colors.grey[100],
-                    contentPadding: EdgeInsets.symmetric(
+                    contentPadding: const EdgeInsets.symmetric(
                       vertical: 0,
                       horizontal: 16,
                     ),
@@ -218,17 +195,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
-
+              const SizedBox(height: 16),
               FutureBuilder<List<GetL>>(
                 future: _futureLapangan,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text("Lapangan tidak ditemukan"));
+                    return _emptyWidget("Tidak ada lapangan");
                   }
 
                   final lapanganList =
@@ -243,19 +219,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           .toList();
 
                   if (lapanganList.isEmpty) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20.0),
-                        child: Text("Tidak ada lapangan yang dicari."),
-                      ),
-                    );
+                    return _emptyWidget("Lapangan tidak ditemukan");
                   }
 
                   return Padding(
-                    padding: EdgeInsets.all(12),
+                    padding: const EdgeInsets.all(12),
                     child: ListView.builder(
                       shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
+                      physics: const NeverScrollableScrollPhysics(),
                       itemCount: lapanganList.length,
                       itemBuilder: (BuildContext context, int index) {
                         final lapangan = lapanganList[index];
@@ -276,11 +247,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            margin: EdgeInsets.only(bottom: 10),
+                            margin: const EdgeInsets.only(bottom: 10),
                             child: Row(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(8.0),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child:
@@ -295,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     context,
                                                     error,
                                                     stackTrace,
-                                                  ) => Icon(
+                                                  ) => const Icon(
                                                     Icons.broken_image,
                                                     size: 90,
                                                   ),
@@ -304,7 +275,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               height: 120,
                                               width: 90,
                                               color: Colors.grey[300],
-                                              child: Icon(
+                                              child: const Icon(
                                                 Icons.image,
                                                 size: 40,
                                               ),
@@ -313,7 +284,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(
+                                    padding: const EdgeInsets.symmetric(
                                       vertical: 12.0,
                                       horizontal: 8,
                                     ),
@@ -323,7 +294,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Text(
                                           lapangan.name ?? 'Tanpa Nama',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontFamily: 'Gilroy',
                                             fontSize: 16,
                                             color: Colors.black,
@@ -356,8 +327,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-
-      // === FAB DITAMBAHKAN DI SINI ===
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
@@ -365,7 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
             MaterialPageRoute(builder: (context) => MyBookingsPage()),
           );
         },
-        backgroundColor: Color(0xff039EFD),
+        backgroundColor: const Color(0xff73946B),
         label: const Text(
           'MY BOOKINGS',
           style: TextStyle(
@@ -374,7 +343,32 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.white,
           ),
         ),
-        icon: const Icon(Icons.schedule, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _emptyWidget(String message) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.only(top: 40.0),
+        child: Column(
+          children: [
+            const Icon(
+              Icons.hourglass_empty_outlined,
+              size: 64,
+              color: Colors.grey,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              message,
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:futsal_56/project_15/main/add.dart';
-import 'package:futsal_56/project_15/main/add_sc.dart';
+import 'package:futsal_56/project_15/admin_session/edit.dart';
 import 'package:futsal_56/project_15/main/dashboard.dart';
-import 'package:futsal_56/project_15/main/edit.dart';
+import 'package:futsal_56/project_15/src/bootom_nav_2.dart';
 
 class BottomNavScreen extends StatefulWidget {
   const BottomNavScreen({super.key});
@@ -14,33 +13,27 @@ class BottomNavScreen extends StatefulWidget {
 class _BottomNavScreenState extends State<BottomNavScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [HomeScreen(), Add(), EditScreen(), AddSc()];
+  final List<Widget> _pages = [HomeScreen(), EditScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        backgroundColor: Color(0xff039EFD),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: CurvedNavigationBar(
+        items: const [
+          Icon(Icons.home, size: 30, color: Colors.white),
+          Icon(Icons.admin_panel_settings, size: 30, color: Colors.white),
+        ],
+        index: _currentIndex,
+        color: const Color(0xff2F5249),
+        backgroundColor: Colors.transparent,
+        buttonBackgroundColor: const Color.fromARGB(255, 85, 167, 122),
+        animationDuration: const Duration(milliseconds: 500),
         onTap: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(icon: Icon(Icons.add_box), label: 'Tambah'),
-          BottomNavigationBarItem(icon: Icon(Icons.edit), label: 'Edit'),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_month_rounded),
-            label: 'Add Schedule',
-          ),
-        ],
       ),
     );
   }

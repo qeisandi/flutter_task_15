@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 AddLapangan addLapanganFromJson(String str) =>
     AddLapangan.fromJson(json.decode(str));
 
@@ -43,4 +45,14 @@ class Data {
     "price_per_hour": pricePerHour,
     "image_url": imageUrl,
   };
+
+  /// Getter untuk menampilkan harga dalam format Rupiah
+  String get formattedPrice {
+    final formatter = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
+    return formatter.format(pricePerHour ?? 0);
+  }
 }
