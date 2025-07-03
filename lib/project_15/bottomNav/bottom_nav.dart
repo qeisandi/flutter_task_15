@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:futsal_56/project_15/admin_session/edit.dart';
+import 'package:futsal_56/project_15/admin_session/panel_admin.dart';
 import 'package:futsal_56/project_15/main/dashboard.dart';
 import 'package:futsal_56/project_15/src/bootom_nav_2.dart';
 

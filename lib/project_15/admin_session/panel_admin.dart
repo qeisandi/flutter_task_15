@@ -137,10 +137,7 @@ class _EditScreenState extends State<EditScreen> {
             ),
             actions: [
               TextButton(
-                child: Text(
-                  "Batal",
-                  style: TextStyle(color: Color(0xff039EFD)),
-                ),
+                child: Text("Batal"),
                 onPressed: () => Navigator.pop(context),
               ),
               TextButton(
@@ -177,7 +174,7 @@ class _EditScreenState extends State<EditScreen> {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Color(0xff2F5249),
         title: Text(
-          'Edit Lapangan',
+          'Panel Admin',
           style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
         actions: [

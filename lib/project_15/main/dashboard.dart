@@ -75,8 +75,14 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 20),
             Image.asset('assets/image/logo2.png', scale: 5),
             ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text('Logout'),
+              leading: Icon(Icons.logout, color: Colors.red),
+              title: const Text(
+                'Logout',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              ),
               onTap: () {
                 showDialog(
                   context: context,
@@ -86,10 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text(
-                              "Tidak",
-                              style: TextStyle(color: Color(0xff73946B)),
-                            ),
+                            child: const Text("Tidak"),
                           ),
                           TextButton(
                             onPressed: () async {
@@ -122,22 +125,15 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              const Center(
-                child: Column(
-                  children: [
-                    Text(
-                      'WELCOME!',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'Gilroy',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
+              //  Center(
+              //   child: Column(
+              //     children: [
+              //       Image(image: AssetImage('assets/image/welcome.png')),
+              //     ],
+              //   ),
+              // ),
+              SizedBox(height: 16),
               CarouselSlider(
                 options: CarouselOptions(
                   height: 180,
@@ -145,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   enlargeCenterPage: true,
                   viewportFraction: 0.85,
                   aspectRatio: 16 / 9,
-                  autoPlayInterval: const Duration(seconds: 3),
+                  autoPlayInterval: Duration(seconds: 3),
                 ),
                 items:
                     [
