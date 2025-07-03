@@ -10,19 +10,31 @@ class MyBookingsPage extends StatefulWidget {
 }
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
+  BookingService bookingService = BookingService();
   late Future<List<Booking>> _futureBookings;
+  List<Booking> bookings = [];
 
   @override
   void initState() {
     super.initState();
+    _loadBookings();
+  }
+
+  void _loadBookings() {
     _futureBookings = BookingService.getMyBookings();
+    _futureBookings.then((value) {
+      setState(() {
+        bookings = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF4F4F4),
       appBar: AppBar(
-        backgroundColor: Color(0xff2F5249),
+        backgroundColor: const Color(0xff2F5249),
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'My Bookings',
@@ -34,118 +46,202 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
         ),
         centerTitle: true,
       ),
-      body: FutureBuilder<List<Booking>>(
-        future: _futureBookings,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: bookings.isEmpty
+          ? FutureBuilder<List<Booking>>(
+              future: _futureBookings,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text(
+                      'Terjadi kesalahan: ${snapshot.error}',
+                      style: const TextStyle(fontFamily: 'Gilroy'),
+                    ),
+                  );
+                }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(
-                'Terjadi kesalahan: ${snapshot.error}',
-                style: const TextStyle(fontFamily: 'Gilroy'),
-              ),
-            );
-          }
+                final fetched = snapshot.data ?? [];
+                if (fetched.isEmpty) {
+                  return _buildEmpty();
+                }
 
-          final bookings = snapshot.data ?? [];
+                bookings = fetched;
+                return _buildListView();
+              },
+            )
+          : _buildListView(),
+    );
+  }
 
-          if (bookings.isEmpty) {
-            return Center(
+  Widget _buildEmpty() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.sports_soccer, size: 100, color: Colors.grey[400]),
+          const SizedBox(height: 16),
+          const Text(
+            'Belum ada booking',
+            style: TextStyle(
+              fontFamily: 'Gilroy',
+              fontSize: 18,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListView() {
+    return ListView.builder(
+      itemCount: bookings.length,
+      padding: const EdgeInsets.all(16),
+      itemBuilder: (context, index) {
+        final booking = bookings[index];
+        final field = booking.schedule.field;
+        final imageUrl = field.imagePath != null && field.imagePath!.isNotEmpty
+            ? 'https://appfutsal.mobileprojp.com/storage/${field.imagePath}'
+            : null;
+
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          margin: const EdgeInsets.symmetric(vertical: 8),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            elevation: 5,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(14),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.sports_soccer, size: 100, color: Colors.grey[400]),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Belum ada booking',
-                    style: TextStyle(
-                      fontFamily: 'Gilroy',
-                      fontSize: 18,
-                      color: Colors.grey,
+                  Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: imageUrl != null
+                            ? Image.network(
+                                imageUrl,
+                                width: 65,
+                                height: 65,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => _imageFallback(),
+                              )
+                            : _imageFallback(),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              field.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Gilroy',
+                                fontSize: 16,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text('📅 ${booking.schedule.date}'),
+                            Text('🕒 ${booking.schedule.startTime} - ${booking.schedule.endTime}'),
+                            Text('💰 Rp ${field.pricePerHour}'),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade100,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: const Text(
+                          "Aktif",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton.icon(
+                      onPressed: () => _handleCancel(booking.id, index),
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        backgroundColor: Colors.red.withOpacity(0.1),
+                        elevation: 0,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      icon: const Icon(Icons.cancel, color: Colors.red),
+                      label: const Text(
+                        'Cancel Booking',
+                        style: TextStyle(color: Colors.red),
+                      ),
                     ),
                   ),
                 ],
               ),
-            );
-          }
+            ),
+          ),
+        );
+      },
+    );
+  }
 
-          return ListView.builder(
-            itemCount: bookings.length,
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) {
-              final booking = bookings[index];
-              final field = booking.schedule.field;
+  Widget _imageFallback() => Container(
+        width: 65,
+        height: 65,
+        decoration: BoxDecoration(
+          color: Colors.grey[300],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: const Icon(Icons.image_not_supported, color: Colors.grey),
+      );
 
-              final String? imageUrl =
-                  field.imagePath != null && field.imagePath!.isNotEmpty
-                      ? 'https://appfutsal.mobileprojp.com/storage/${field.imagePath}'
-                      : null;
+  Future<void> _handleCancel(int id, int index) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Batalkan Booking'),
+        content: const Text('Yakin ingin membatalkan booking ini?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Tidak')),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Ya')),
+        ],
+      ),
+    );
 
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                margin: const EdgeInsets.symmetric(vertical: 8),
-                elevation: 4,
-                child: ListTile(
-                  leading:
-                      imageUrl != null
-                          ? ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.network(
-                              imageUrl,
-                              width: 60,
-                              height: 60,
-                              fit: BoxFit.cover,
-                              errorBuilder:
-                                  (context, error, stackTrace) => Container(
-                                    width: 60,
-                                    height: 60,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    child: const Icon(
-                                      Icons.broken_image,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                            ),
-                          )
-                          : Container(
-                            width: 60,
-                            height: 60,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Icon(Icons.image_not_supported),
-                          ),
-                  title: Text(
-                    field.name,
-                    style: const TextStyle(
-                      fontFamily: 'Gilroy',
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Tanggal: ${booking.schedule.date}'),
-                      Text(
-                        'Jam: ${booking.schedule.startTime} - ${booking.schedule.endTime}',
-                      ),
-                      Text('Harga: Rp ${field.pricePerHour}'),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
+    if (confirm == true) {
+      final success = await bookingService.cancelBooking(id);
+      if (success) {
+        setState(() => bookings.removeAt(index));
+        _showSnackbar("Booking berhasil dibatalkan", success: true);
+      } else {
+        _showSnackbar("Gagal membatalkan booking", success: false);
+      }
+    }
+  }
+
+  void _showSnackbar(String message, {bool success = true}) {
+    final color = success ? Colors.green : Colors.red;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: color,
+        content: Text(message),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

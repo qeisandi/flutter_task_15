@@ -5,7 +5,7 @@ class Endpoint {
   static const register = '$baseUrl/register';
   static const login = '$baseUrl/login';
 
-  // Fields (Lapangan)
+  // Fields 
   static const add = '$baseUrl/fields';
   static const fields = '$baseUrl/fields';
   static String update(int id) => '$baseUrl/fields/$id'; // PATCH or DELETE
@@ -19,4 +19,5 @@ class Endpoint {
   static const bookSchedule = '$baseUrl/bookings'; // POST
   static const myBookings = '$baseUrl/my-bookings'; // GET
   static const allBookings = '$baseUrl/all-bookings'; // GET
+  static String delete(int id) => '$baseUrl/bookings/$id'; //DELETE
 }

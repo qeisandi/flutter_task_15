@@ -81,7 +81,7 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(data['message'] ?? 'Booking berhasil')),
         );
-        fetchSchedules(); // Refresh list
+        fetchSchedules(); 
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Gagal booking: ${response.body}')),

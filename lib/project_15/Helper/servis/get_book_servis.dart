@@ -23,4 +23,31 @@ class BookingService {
       throw Exception('Gagal mengambil data booking saya');
     }
   }
+
+  Future<bool> cancelBooking(int id) async {
+    try {
+      final token = await SharedPref.getToken();
+
+      final response = await http.delete(
+        Uri.parse(Endpoint.delete(id)),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Lapangan berhasil dihapus");
+        return true;
+      } else {
+        print(
+          "Gagal hapus lapangan: ${response.statusCode} - ${response.body}",
+        );
+        return false;
+      }
+    } catch (e) {
+      print("Exception saat hapus lapangan: $e");
+      return false;
+    }
+  }
 }
