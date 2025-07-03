@@ -56,7 +56,7 @@ class _DetailLapanganPageDuaState extends State<DetailLapanganPageDua> {
           widget.lapangan.name ?? 'Detail Lapangan',
           style: const TextStyle(color: Colors.white, fontFamily: 'Gilroy'),
         ),
-        backgroundColor: const Color(0xff039EFD),
+        backgroundColor: Color(0xff2F5249),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -64,24 +64,25 @@ class _DetailLapanganPageDuaState extends State<DetailLapanganPageDua> {
           children: [
             widget.lapangan.imageUrl != null
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      widget.lapangan.imageUrl!,
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.broken_image, size: 120),
-                    ),
-                  )
-                : Container(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    widget.lapangan.imageUrl!,
                     height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: const Icon(Icons.image, size: 80),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder:
+                        (context, error, stackTrace) =>
+                            const Icon(Icons.broken_image, size: 120),
                   ),
+                )
+                : Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(Icons.image, size: 80),
+                ),
             const SizedBox(height: 20),
             Text(
               widget.lapangan.name ?? "Tanpa Nama",
@@ -108,22 +109,20 @@ class _DetailLapanganPageDuaState extends State<DetailLapanganPageDua> {
             const SizedBox(height: 12),
             _schedules.isEmpty
                 ? FutureBuilder<List<Schedule>>(
-                    future: _futureSchedules,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState ==
-                          ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Text("Gagal memuat jadwal: ${snapshot.error}");
-                      } else if (!snapshot.hasData ||
-                          snapshot.data!.isEmpty) {
-                        return const Text("Belum ada jadwal tersedia.");
-                      }
+                  future: _futureSchedules,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Text("Gagal memuat jadwal: ${snapshot.error}");
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Text("Belum ada jadwal tersedia.");
+                    }
 
-                      _schedules = snapshot.data!;
-                      return buildScheduleList();
-                    },
-                  )
+                    _schedules = snapshot.data!;
+                    return buildScheduleList();
+                  },
+                )
                 : buildScheduleList(),
           ],
         ),
@@ -143,8 +142,7 @@ class _DetailLapanganPageDuaState extends State<DetailLapanganPageDua> {
 
         return Card(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: SwitchListTile(
             value: !isBooked,
             onChanged: (_) => toggleBookingStatus(index),

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:futsal_56/project_15/Helper/model/model_get.dart';
 import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
-import 'package:futsal_56/project_15/main/detail_dua.dart';
+import 'package:futsal_56/project_15/admin_session/add.dart';
+import 'package:futsal_56/project_15/admin_session/add_sc.dart';
+import 'package:futsal_56/project_15/admin_session/detail_dua.dart';
+import 'package:futsal_56/project_15/main/profile.dart';
+import 'package:futsal_56/project_15/src2/source/circular_menu.dart';
+import 'package:futsal_56/project_15/src2/source/circular_menu_item.dart';
 
 class EditScreen extends StatefulWidget {
   static const String id = "/home_screen";
@@ -17,6 +22,8 @@ class _EditScreenState extends State<EditScreen> {
   late Future<List<GetL>> _futureLapangan;
   final TextEditingController _searchController = TextEditingController();
   String searchKeyword = '';
+  String _colorName = 'No';
+  Color _color = Colors.black;
 
   @override
   void initState() {
@@ -84,7 +91,7 @@ class _EditScreenState extends State<EditScreen> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff039EFD),
+                  backgroundColor: Color(0xff437057),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -130,10 +137,7 @@ class _EditScreenState extends State<EditScreen> {
             ),
             actions: [
               TextButton(
-                child: Text(
-                  "Batal",
-                  style: TextStyle(color: Color(0xff039EFD)),
-                ),
+                child: Text("Batal"),
                 onPressed: () => Navigator.pop(context),
               ),
               TextButton(
@@ -168,11 +172,30 @@ class _EditScreenState extends State<EditScreen> {
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Color(0xff039EFD),
+        backgroundColor: Color(0xff2F5249),
         title: Text(
-          'Edit Lapangan',
+          'Panel Admin',
           style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Colors.white),
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Fitur Settings belum tersedia")),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Profile()),
+              );
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: refreshData,
@@ -216,7 +239,29 @@ class _EditScreenState extends State<EditScreen> {
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text("Lapangan tidak ditemukan"));
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 40.0),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.hourglass_empty,
+                              size: 64,
+                              color: Colors.grey,
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              "Tidak ada lapangan",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
                   }
 
                   final lapanganList =
@@ -240,7 +285,7 @@ class _EditScreenState extends State<EditScreen> {
                   }
 
                   return Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 12),
+                    padding: EdgeInsets.symmetric(horizontal: 12),
                     child: GridView.builder(
                       shrinkWrap: true,
                       physics: NeverScrollableScrollPhysics(),
@@ -333,7 +378,7 @@ class _EditScreenState extends State<EditScreen> {
                                     IconButton(
                                       icon: Icon(
                                         Icons.edit,
-                                        color: Color(0xff039EFD),
+                                        color: Color(0xff437057),
                                       ),
                                       onPressed:
                                           () => _showUpdateDialog(lapangan),
@@ -360,6 +405,40 @@ class _EditScreenState extends State<EditScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: CircularMenu(
+        alignment: Alignment.bottomRight,
+        toggleButtonColor: Color(0xff73946B),
+        items: [
+          CircularMenuItem(
+            icon: Icons.schedule,
+            color: Colors.green,
+            onTap: () {
+              setState(() {
+                _color = Colors.green;
+                _colorName = 'Green';
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddSc()),
+                );
+              });
+            },
+          ),
+          CircularMenuItem(
+            icon: Icons.add_box,
+            color: Colors.blue,
+            onTap: () {
+              setState(() {
+                _color = Colors.blue;
+                _colorName = 'Blue';
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Add()),
+                );
+              });
+            },
+          ),
+        ],
       ),
     );
   }

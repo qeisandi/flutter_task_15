@@ -105,7 +105,7 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
           lapangan.name ?? "Detail Lapangan",
           style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
-        backgroundColor: Color(0xff039EFD),
+        backgroundColor: Color(0xff2F5249),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -187,7 +187,7 @@ class _DetailLapanganPageState extends State<DetailLapanganPage> {
                                         : ElevatedButton(
                                           onPressed: () => bookNow(sc.id),
                                           style: ElevatedButton.styleFrom(
-                                            backgroundColor: Color(0xff039EFD),
+                                            backgroundColor: Color(0xff73946B),
                                           ),
                                           child: Text(
                                             'Booking',

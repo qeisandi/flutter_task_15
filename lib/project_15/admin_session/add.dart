@@ -91,7 +91,13 @@ class _AddState extends State<Add> {
     return Scaffold(
       backgroundColor: Color(0xffF7F9FB),
       appBar: AppBar(
-        backgroundColor: Color(0xff039EFD),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+        ),
+        backgroundColor: Color(0xff2F5249),
         title: Text(
           'Tambah Lapangan',
           style: TextStyle(color: Colors.white, fontFamily: 'Gilroy'),
@@ -200,7 +206,7 @@ class _AddState extends State<Add> {
                   ),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xff039EFD),
+                  backgroundColor: Color(0xff73946B),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

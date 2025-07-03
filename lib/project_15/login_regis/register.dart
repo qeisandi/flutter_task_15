@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
+import 'package:futsal_56/project_15/login_regis/login.dart';
 
 class Register extends StatefulWidget {
   static const String id = "/register";
@@ -223,7 +224,12 @@ class _RegisterState extends State<Register> {
                               Text("Already have an account?"),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/login');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Login(),
+                                    ),
+                                  );
                                 },
                                 child: Text('Login'),
                               ),

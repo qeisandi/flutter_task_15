@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:futsal_56/project_15/Helper/prefrs/pref_api.dart';
 import 'package:futsal_56/project_15/Helper/servis/main_servis.dart';
 import 'package:futsal_56/project_15/bottomNav/bottom_nav.dart';
+import 'package:futsal_56/project_15/login_regis/register.dart';
 
 class Login extends StatefulWidget {
   static const String id = "/login";
@@ -78,7 +79,6 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -88,7 +88,6 @@ class _LoginState extends State<Login> {
               ),
             ),
           ),
-
           SafeArea(
             child: SingleChildScrollView(
               padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
@@ -182,17 +181,7 @@ class _LoginState extends State<Login> {
                               ),
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
-                                  print('Email: ${_emailController.text}');
-                                  print(
-                                    'Password: ${_passwordController.text}',
-                                  );
                                   login();
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => BottomNavScreen(),
-                                    ),
-                                  );
                                 }
                               },
                               child:
@@ -210,14 +199,18 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                           SizedBox(height: 16),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Text("Don't have an account?"),
                               TextButton(
                                 onPressed: () {
-                                  Navigator.pushNamed(context, '/register');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const Register(),
+                                    ),
+                                  );
                                 },
                                 child: Text('Register'),
                               ),

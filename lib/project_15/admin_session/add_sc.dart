@@ -131,21 +131,27 @@ class _AddScState extends State<AddSc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios_new_outlined, color: Colors.white),
+        ),
+        title: Text(
           "Tambah Jadwal",
           style: TextStyle(fontFamily: 'Gilroy', color: Colors.white),
         ),
-        backgroundColor: const Color(0xff039EFD),
+        backgroundColor: Color(0xff2F5249),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(16),
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
           elevation: 4,
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(16),
             child: Column(
               children: [
                 DropdownButtonFormField<GetL>(
@@ -166,7 +172,7 @@ class _AddScState extends State<AddSc> {
                         );
                       }).toList(),
                 ),
-                const SizedBox(height: 16),
+                SizedBox(height: 16),
                 GestureDetector(
                   onTap: pickDate,
                   child: InputDecorator(
@@ -221,7 +227,7 @@ class _AddScState extends State<AddSc> {
                 ElevatedButton(
                   onPressed: isLoading ? null : submitSchedule,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xff039EFD),
+                    backgroundColor: const Color(0xff73946B),
                     minimumSize: const Size.fromHeight(50),
                   ),
                   child:
