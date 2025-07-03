@@ -7,10 +7,18 @@ import 'package:futsal_56/project_15/main/add.dart';
 import 'package:futsal_56/project_15/main/add_sc.dart';
 import 'package:futsal_56/project_15/main/dashboard.dart';
 import 'package:futsal_56/project_15/splas/splas.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+import 'dart:io';
+void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+  }
 }
 
 class MyApp extends StatefulWidget {
